@@ -1,6 +1,8 @@
 <?php
 
-namespace App\Utilities;
+namespace App\Utilities\Interfaces;
+
+use App\Utilities\Pizza;
 
 interface Oven
 {

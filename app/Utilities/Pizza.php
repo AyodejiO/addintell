@@ -39,7 +39,18 @@ class Pizza
      */
     public function eatSlice(): void
     {
-
+        if ($this->getSlicesRemaining() === 0) {
+            throw new BadFunctionCallException('No slices left to eat');
+        }
+        if ($this->getStatus() === self::STATUS_RAW) {
+            throw new BadFunctionCallException('Trying to eat a raw pizza');
+        }
+        $this->slicesRemaining--;
+        if ($this->getSlicesRemaining() === 0) {
+            $this->setStatus(self::STATUS_ALL_EATEN);
+        } else {
+            $this->setStatus(self::STATUS_PARTLY_EATEN);
+        }
     }
 
     public function getSlicesRemaining(): int

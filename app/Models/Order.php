@@ -54,6 +54,10 @@ class Order extends Model
     // todo create this function (returns order price)
     public function getPriceAttribute(): float
     {
-
+        $totals = $this->recipes->map(function (Recipe $recipe) {
+            return $recipe->price;
+        });
+        
+        return $totals->sum();
     }
 }

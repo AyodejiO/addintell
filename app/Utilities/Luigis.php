@@ -5,6 +5,7 @@ namespace App\Utilities;
 use App\Models\Ingredient;
 use App\Models\Order;
 use App\Models\Recipe;
+use App\Utilities\ElectricOven;
 use Illuminate\Support\Collection;
 
 class Luigis
@@ -35,6 +36,14 @@ class Luigis
      */
     public function deliver(Order $order): Collection
     {
+        $preparedOrder = $order->recipes->map(function (Recipe $recipe) {
+            $pizza = new Pizza($recipe);
+            $this->oven->bake($pizza);
+            return $pizza;
+        });
+
+        return $preparedOrder;
+
         // prepare and cook each recipe in the order
     }
 

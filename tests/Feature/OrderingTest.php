@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use Database\Seeders\DatabaseSeeder;
 use App\Models\Order;
 use App\Models\OrderRecipe;
 use App\Models\Recipe;
@@ -9,16 +10,22 @@ use App\Utilities\Luigis;
 use App\Utilities\Pizza;
 use BadFunctionCallException;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class OrderingTest extends TestCase
 {
+    use RefreshDatabase;
+
     /** @var Luigis */
     private $luigis;
 
     public function __construct($name = null, array $data = [], $dataName = '')
     {
         parent::__construct($name, $data, $dataName);
+        parent::setUp();
+
+        $this->seed(DatabaseSeeder::class);
         $this->luigis = new Luigis();
     }
 
@@ -26,19 +33,19 @@ class OrderingTest extends TestCase
     {
         DB::connection(env('DB_CONNECTION'))->beginTransaction();
 
-        try {
+        $magRecipe = Recipe::where('name', 'Margherita')->first();
 
+        try {
             // 1) Create the order
             $order = Order::create(['status' => Order::STATUS_PENDING]);
             OrderRecipe::create([
                 'order_id' => $order->id,
-                'recipe_id' => Recipe::MARGHERITA_ID,
+                'recipe_id' => $magRecipe->id,
             ]);
 
             $this->assertEquals(1, count($order->recipes));
-            $this->assertEquals(Recipe::MARGHERITA_ID, $order->recipes->first()->id);
+            $this->assertEquals($magRecipe->id, $order->recipes->first()->id);
             $this->assertEquals(6.99, $order->getPriceAttribute());
-
 
             // 2) Deliver the order
             $pizzas = $this->luigis->deliver($order);
@@ -79,8 +86,8 @@ class OrderingTest extends TestCase
     }
 
     // todo create test
-    public function testMargheritaAndHawaiian(): void
-    {
+    // public function testMargheritaAndHawaiian(): void
+    // {
 
-    }
+    // }
 }
