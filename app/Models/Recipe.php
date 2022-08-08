@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Support\Collection;
@@ -23,8 +24,7 @@ use Illuminate\Support\Collection;
  */
 class Recipe extends Model
 {
-    const MARGHERITA_ID = 1;
-    const HAWAIIAN_ID = 2;
+    use HasFactory;
 
     protected $table = 'luigis_recipes';
     public $timestamps = false;

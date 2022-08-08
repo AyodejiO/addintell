@@ -9,59 +9,57 @@ use App\Models\RecipeIngredient;
 
 class RecipeIngredientTableSeeder extends Seeder
 {
-
     public function run()
     {
-        // Margherita
-        RecipeIngredient::updateOrCreate(
-            ['id' => 1],
-            [
-                'recipe_id'     => Recipe::MARGHERITA_ID,
-                'ingredient_id' => Ingredient::TOMATO_ID,
-                'amount'        => 2
-            ]
-        );
-        RecipeIngredient::updateOrCreate(
-            ['id' => 2],
-            [
-                'recipe_id'     => Recipe::MARGHERITA_ID,
-                'ingredient_id' => Ingredient::MOZZARELLA_ID,
-                'amount'        => 2
-            ]
-        );
+        // create ingredients
+        $tomato = Ingredient::updateOrCreate(['name' => 'Tomato']);
+        $mozzarella = Ingredient::updateOrCreate(['name' => 'Mozzarella']);
+        $ham = Ingredient::updateOrCreate(['name' => 'Ham']);
 
-        // Hawaiian
-        RecipeIngredient::updateOrCreate(
-            ['id' => 3],
-            [
-                'recipe_id'     => Recipe::HAWAIIAN_ID,
-                'ingredient_id' => Ingredient::TOMATO_ID,
-                'amount'        => 2
-            ]
-        );
-        RecipeIngredient::updateOrCreate(
-            ['id' => 4],
-            [
-                'recipe_id'     => Recipe::HAWAIIAN_ID,
-                'ingredient_id' => Ingredient::MOZZARELLA_ID,
-                'amount'        => 2
-            ]
-        );
-        RecipeIngredient::updateOrCreate(
-            ['id' => 5],
-            [
-                'recipe_id'     => Recipe::HAWAIIAN_ID,
-                'ingredient_id' => Ingredient::HAM_ID,
-                'amount'        => 1
-            ]
-        );
-        RecipeIngredient::updateOrCreate(
-            ['id' => 6],
-            [
-                'recipe_id'     => Recipe::HAWAIIAN_ID,
-                'ingredient_id' => Ingredient::PINEAPPLE_ID,
-                'amount'        => 1
-            ]
-        );
+        $this->command->info('Ingredient table seeded!');
+
+        // create recipes
+        $pineapple = Ingredient::updateOrCreate(['name' => 'Pineapple']);
+        $margherita = Recipe::updateOrCreate(['name' => 'Margherita', 'price' => 6.99]);
+        $hawaiian = Recipe::updateOrCreate(['name' => 'Hawaiian', 'price' => 8.99]);
+
+        $this->command->info('Recipe table seeded!');
+
+        // create recipe ingredients
+        RecipeIngredient::updateOrCreate([
+            'recipe_id' => $margherita->id, 
+            'ingredient_id' => $tomato->id,
+            'amount' => 2
+        ]);
+
+        RecipeIngredient::updateOrCreate([
+            'recipe_id' => $margherita->id, 
+            'ingredient_id' => $mozzarella->id,
+            'amount' => 2
+        ]);
+
+        RecipeIngredient::updateOrCreate([
+            'recipe_id' => $hawaiian->id, 
+            'ingredient_id' => $tomato->id,
+            'amount' => 2
+        ]);
+
+        RecipeIngredient::updateOrCreate([
+            'recipe_id' => $hawaiian->id, 
+            'ingredient_id' => $mozzarella->id,
+            'amount' => 2
+        ]);
+
+        RecipeIngredient::updateOrCreate([
+            'recipe_id' => $hawaiian->id, 
+            'ingredient_id' => $ham->id,
+            'amount' => 1
+        ]);
+
+        RecipeIngredient::updateOrCreate([
+            'recipe_id' => $hawaiian->id, 
+            'ingredient_id' => $pineapple->id,
+            'amount' => 1
+        ]);
     }
 }

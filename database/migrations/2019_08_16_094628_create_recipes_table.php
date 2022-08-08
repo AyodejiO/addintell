@@ -8,7 +8,7 @@ class CreateRecipesTable extends Migration {
 	public function up()
 	{
 		Schema::create('luigis_recipes', function(Blueprint $table) {
-			$table->increments('id', true);
+			$table->id();
 			$table->string('name', 255);
 			$table->float('price');
 		});

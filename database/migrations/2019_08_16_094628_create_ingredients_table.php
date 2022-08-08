@@ -8,7 +8,7 @@ class CreateIngredientsTable extends Migration {
 	public function up()
 	{
 		Schema::create('luigis_ingredients', function(Blueprint $table) {
-			$table->increments('id', true);
+			$table->id();
 			$table->string('name', 255);
 		});
 	}

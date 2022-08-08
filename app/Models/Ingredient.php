@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Support\Collection;
 
 /**
@@ -23,10 +24,8 @@ use Illuminate\Support\Collection;
  */
 class Ingredient extends Model
 {
-    const TOMATO_ID = 1;
-    const MOZZARELLA_ID = 2;
-    const HAM_ID = 3;
-    const PINEAPPLE_ID = 4;
+
+    use HasFactory;
 
     protected $table = 'luigis_ingredients';
     public $timestamps = false;

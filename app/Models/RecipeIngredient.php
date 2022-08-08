@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -21,6 +22,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  */
 class RecipeIngredient extends Model
 {
+    use HasFactory;
+    
     protected $table = 'luigis_recipe_ingredients';
     public $timestamps = false;
     protected $fillable = ['id', 'recipe_id', 'ingredient_id', 'amount'];
