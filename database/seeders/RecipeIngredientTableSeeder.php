@@ -12,14 +12,14 @@ class RecipeIngredientTableSeeder extends Seeder
     public function run()
     {
         // create ingredients
-        $tomato = Ingredient::updateOrCreate(['name' => 'Tomato']);
-        $mozzarella = Ingredient::updateOrCreate(['name' => 'Mozzarella']);
-        $ham = Ingredient::updateOrCreate(['name' => 'Ham']);
+        $tomato = Ingredient::updateOrCreate(['name' => 'Tomato', 'price' => 1.0]);
+        $mozzarella = Ingredient::updateOrCreate(['name' => 'Mozzarella', 'price' => 0.5]);
+        $ham = Ingredient::updateOrCreate(['name' => 'Ham', 'price' => 1.5]);
+        $pineapple = Ingredient::updateOrCreate(['name' => 'Pineapple', 'price' => 1.0]);
 
         $this->command->info('Ingredient table seeded!');
 
         // create recipes
-        $pineapple = Ingredient::updateOrCreate(['name' => 'Pineapple']);
         $margherita = Recipe::updateOrCreate(['name' => 'Margherita', 'price' => 6.99]);
         $hawaiian = Recipe::updateOrCreate(['name' => 'Hawaiian', 'price' => 8.99]);
 

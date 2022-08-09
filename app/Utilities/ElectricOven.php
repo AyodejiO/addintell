@@ -2,16 +2,19 @@
 
 namespace App\Utilities;
 
+use App\Enums\PizzaStatusEnum;
 use App\Utilities\Interfaces\Oven;
 
 class ElectricOven implements Oven {
     public function heatUp(): self {
-        echo 'oven is heating up';
+        echo '10 minutes to heat up';
         return $this;
     }
     public function bake(Pizza &$pizza): self {
-        echo 'oven is baking';
-        $pizza->setStatus(Pizza::STATUS_COOKED);
+        $recipe = $pizza->getRecipe();
+        $timeNeeded = count($recipe->ingredients) + 5;
+        echo "{$timeNeeded} minutes to bake pizza";
+        $pizza->setStatus(PizzaStatusEnum::STATUS_COOKED->value);
         // $pizza->status = 'cooked';
         return $this;
     }

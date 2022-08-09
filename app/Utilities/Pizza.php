@@ -2,25 +2,13 @@
 
 namespace App\Utilities;
 
+use App\Enums\PizzaStatusEnum;
 use BadFunctionCallException;
 use App\Models\Recipe;
 use InvalidArgumentException;
 
 class Pizza
 {
-    const STATUS_RAW = 'raw';
-    const STATUS_COOKED = 'cooked';
-    const STATUS_OVER_COOKED = 'overCooked';
-    const STATUS_PARTLY_EATEN = 'partlyEaten';
-    const STATUS_ALL_EATEN = 'allEaten';
-    const STATUSES = [
-        self::STATUS_RAW,
-        self::STATUS_COOKED,
-        self::STATUS_OVER_COOKED,
-        self::STATUS_PARTLY_EATEN,
-        self::STATUS_ALL_EATEN,
-    ];
-
     private $slicesRemaining = 8;
     /** @var Recipe */
     private $recipe;
@@ -29,7 +17,7 @@ class Pizza
     public function __construct(Recipe $recipe)
     {
         $this->recipe = $recipe;
-        $this->status = self::STATUS_RAW;
+        $this->status = PizzaStatusEnum::STATUS_RAW->value;
     }
 
     // TODO: implement function. Update pizza status to be partly eaten or all eaten
@@ -42,14 +30,14 @@ class Pizza
         if ($this->getSlicesRemaining() === 0) {
             throw new BadFunctionCallException('No slices left to eat');
         }
-        if ($this->getStatus() === self::STATUS_RAW) {
+        if ($this->getStatus() === PizzaStatusEnum::STATUS_RAW->value) {
             throw new BadFunctionCallException('Trying to eat a raw pizza');
         }
         $this->slicesRemaining--;
         if ($this->getSlicesRemaining() === 0) {
-            $this->setStatus(self::STATUS_ALL_EATEN);
+            $this->setStatus(PizzaStatusEnum::STATUS_ALL_EATEN->value);
         } else {
-            $this->setStatus(self::STATUS_PARTLY_EATEN);
+            $this->setStatus(PizzaStatusEnum::STATUS_PARTLY_EATEN->value);
         }
     }
 
@@ -75,7 +63,7 @@ class Pizza
 
     public function setStatus(string $status): Pizza
     {
-        if (!in_array($status, self::STATUSES)) {
+        if (!enum_exists( PizzaStatusEnum::class)) {
             throw new InvalidArgumentException("$status is not a valid status");
         }
         $this->status = $status;

@@ -10,6 +10,7 @@ class CreateIngredientsTable extends Migration {
 		Schema::create('luigis_ingredients', function(Blueprint $table) {
 			$table->id();
 			$table->string('name', 255);
+			$table->float('price');
 		});
 	}
 

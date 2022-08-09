@@ -19,21 +19,6 @@ use Illuminate\Support\Collection;
  */
 class Order extends Model
 {
-    const STATUS_PENDING = 'pending';
-    const STATUS_PREPARING = 'preparing';
-    const STATUS_COOKING = 'cooking';
-    const STATUS_READY = 'ready';
-    const STATUS_DELIVERED = 'delivered';
-    const STATUS_CANCELLED = 'cancelled';
-    const STATUSES = [
-        self::STATUS_PREPARING,
-        self::STATUS_PREPARING,
-        self::STATUS_COOKING,
-        self::STATUS_READY,
-        self::STATUS_DELIVERED,
-        self::STATUS_CANCELLED,
-    ];
-
     protected $table = 'luigis_orders';
     public $timestamps = true;
 
@@ -51,13 +36,26 @@ class Order extends Model
         );
     }
 
+    public function ingredients(): HasManyThrough
+    {
+        return $this->hasManyThrough(
+            Ingredient::class,
+            OrderIngredients::class,
+            'order_id',
+            'id',
+            'id',
+            'ingredient_id'
+        );
+    }
+
     // todo create this function (returns order price)
     public function getPriceAttribute(): float
     {
         $totals = $this->recipes->map(function (Recipe $recipe) {
-            return $recipe->price;
+            $orderRecipe = OrderRecipe::where('order_id', $this->id)->where('recipe_id', $recipe->id)->first();
+            return $recipe->price + $orderRecipe->total;
         });
-        
+
         return $totals->sum();
     }
 }

@@ -47,6 +47,11 @@ class Recipe extends Model
         return $this->hasMany(RecipeIngredient::class);
     }
 
+    public function orderIngredientRequirements(): HasMany
+    {
+        return $this->hasMany(RecipeIngredient::class);
+    }
+
     public function orders(): HasManyThrough
     {
         return $this->hasManyThrough(
@@ -57,5 +62,50 @@ class Recipe extends Model
             'id',
             'order_id'
         );
+    }
+
+    public function customiseRecipe(Order $order): void {
+        $this->ingredientRequirements->each(function (RecipeIngredient $recipeIngredient) use ($order) {
+            $this->orderIngredientRequirements()->create([
+                'ingredient_id' => $recipeIngredient->ingredient_id,
+                'order_id' => $order->order_id,
+                'amount' => $recipeIngredient->amount,
+            ]);
+        });
+    }
+
+    public function isCustomRecipe(Order $order): bool {
+        return $this->orderIngredientRequirements()->where('order_id', $order->id)->exists();
+    }
+
+    public function addIngredient(Order $order, Ingredient $ingredient, int $amount): Recipe
+    {
+        if (!$this->isCustomRecipe($order)) {
+            $this->customiseRecipe($order);
+        }
+
+        $ingredientReq = $this->orderIngredientRequirements()->firstOrNew([
+            'ingredient_id' => $ingredient->id,
+            'order_id' => $order->id,
+        ]);
+
+        // should fail if OrderRecipe doesn't exist
+        $orderRecipe = OrderRecipe::where('order_id', $order->id)->where('recipe_id', $this->id)->first();
+        $orderRecipe->total += ($ingredient->price * $amount);
+        $orderRecipe->save();
+
+        $ingredientReq->amount += $amount;
+        $ingredientReq->save();
+
+        return $this;
+    }
+
+    public function removeIngredient(Order $order, Ingredient $ingredient): void
+    {
+        if (!$this->isCustomRecipe($order)) {
+            $this->customiseRecipe($order);
+        }
+        
+        $this->orderIngredientRequirements()->where('order_id', $order->id)->where('ingredient_id', $ingredient->id)->delete();
     }
 }
